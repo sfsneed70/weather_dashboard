@@ -56,13 +56,13 @@ class WeatherService {
     };
   }
   private buildGeocodeQuery() {
-    return `${this.baseURL}/geo/1.0/direct?apikey=${this.apiKey}&q=${this.cityName}&limit=1`;
+    return `${this.baseURL}/geo/1.0/direct?apikey=${this.apiKey}&q=${this.cityName}`;
   }
   private buildWeatherQuery(coordinates: Coordinates) {
-    return `${this.baseURL}/data/2.5/weather?apikey=${this.apiKey}&lat=${coordinates.lat}&lon=${coordinates.lon}`;
+    return `${this.baseURL}/data/2.5/weather?apikey=${this.apiKey}&lat=${coordinates.lat}&lon=${coordinates.lon}&units=imperial`;
   }
   private buildForcastQuery(coordinates: Coordinates) {
-    return `${this.baseURL}/data/2.5/forecast?apikey=${this.apiKey}&lat=${coordinates.lat}&lon=${coordinates.lon}`;
+    return `${this.baseURL}/data/2.5/forecast?apikey=${this.apiKey}&lat=${coordinates.lat}&lon=${coordinates.lon}&units=imperial`;
   }
   private async fetchAndDestructureLocationData() {
     const locationData = await this.fetchLocationData(this.buildGeocodeQuery());
@@ -83,7 +83,7 @@ class WeatherService {
       new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
       response.weather[0].icon,
       response.weather[0].description,
-      Math.round((response.main.temp * 1.8 - 459.67) * 10) / 10,
+      response.main.temp,
       response.wind.speed,
       response.main.humidity
     );
@@ -93,17 +93,20 @@ class WeatherService {
     weatherData.push(currentWeather);
     for (let i = 0; i < forcastData.length; i++) {
       const data = forcastData[i];
-      weatherData.push(
-        new Weather(
-          currentWeather.city,
-          data.dt_txt,
-          data.weather[0].icon,
-          data.weather[0].description,
-          Math.round((data.main.temp * 1.8 - 459.67) * 10) / 10,
-          data.wind.speed,
-          data.main.humidity
-        )
-      );
+      const date = new Date(data.dt_txt+' UTC').toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      // if (data.dt_txt.includes("12:00:00")) {
+        weatherData.push(
+          new Weather(
+            currentWeather.city,
+            date,
+            data.weather[0].icon,
+            data.weather[0].description,
+            data.main.temp,
+            data.wind.speed,
+            data.main.humidity
+          )
+        );
+      // }
     }
     return weatherData;
   }
