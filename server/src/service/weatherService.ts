@@ -1,12 +1,122 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 // TODO: Define an interface for the Coordinates object
+interface Coordinates {
+  lat: number;
+  lon: number;
+}
 
 // TODO: Define a class for the Weather object
+class Weather {
+  city: string;
+  date: string;
+  icon: string;
+  iconDescription: string;
+  tempF: number;
+  windSpeed: number;
+  humidity: number;
+  constructor(
+    city: string,
+    date: string,
+    icon: string,
+    iconDescription: string,
+    tempF: number,
+    windSpeed: number,
+    humidity: number
+  ) {
+    this.city = city;
+    this.date = date;
+    this.icon = icon;
+    this.iconDescription = iconDescription;
+    this.tempF = tempF;
+    this.windSpeed = windSpeed;
+    this.humidity = humidity;
+  }
+}
 
 // TODO: Complete the WeatherService class
 class WeatherService {
+  private baseURL?: string;
+  private apiKey?: string;
+  private cityName?: string;
+
+  constructor() {
+    this.baseURL = process.env.API_BASE_URL || "";
+    this.apiKey = process.env.API_KEY || "";
+  }
+  private async fetchLocationData(query: string) {
+    const response = await fetch(query);
+    return await response.json();
+  }
+  private destructureLocationData(locationData: Coordinates[]) {
+    return {
+      lat: locationData[0].lat,
+      lon: locationData[0].lon,
+    };
+  }
+  private buildGeocodeQuery() {
+    return `${this.baseURL}/geo/1.0/direct?apikey=${this.apiKey}&q=${this.cityName}&limit=1`;
+  }
+  private buildWeatherQuery(coordinates: Coordinates) {
+    return `${this.baseURL}/data/2.5/weather?apikey=${this.apiKey}&lat=${coordinates.lat}&lon=${coordinates.lon}`;
+  }
+  private buildForcastQuery(coordinates: Coordinates) {
+    return `${this.baseURL}/data/2.5/forecast?apikey=${this.apiKey}&lat=${coordinates.lat}&lon=${coordinates.lon}`;
+  }
+  private async fetchAndDestructureLocationData() {
+    const locationData = await this.fetchLocationData(this.buildGeocodeQuery());
+    return this.destructureLocationData(locationData);
+  }
+  private async fetchWeatherData(coordinates: Coordinates) {
+    const response = await fetch(this.buildWeatherQuery(coordinates));
+    return await response.json();
+  }
+  private async fetchForcastData(coordinates: Coordinates) {
+    const response = await fetch(this.buildForcastQuery(coordinates));
+    return await response.json();
+  }
+  private parseCurrentWeather(response: any) {
+
+    return new Weather(
+      this.cityName || "",
+      new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      response.weather[0].icon,
+      response.weather[0].description,
+      Math.round((response.main.temp * 1.8 - 459.67) * 10) / 10,
+      response.wind.speed,
+      response.main.humidity
+    );
+  }
+  private buildForecastArray(currentWeather: Weather, forcastData: any[]) {
+    // console.log('weatherData', weatherData);
+    let weatherData: Weather[] = [];
+    weatherData.push(currentWeather);
+    for (let i = 0; i < forcastData.length; i++) {
+      const data = forcastData[i];
+      weatherData.push(
+        new Weather(
+          currentWeather.city,
+          data.dt_txt,
+          data.weather[0].icon,
+          data.weather[0].description,
+          Math.round((data.main.temp * 1.8 - 459.67) * 10) / 10,
+          data.wind.speed,
+          data.main.humidity
+        )
+      );
+    }
+    return weatherData;
+  }
+
+  async getWeatherForCity(city: string) {
+    this.cityName = city;
+    const coordinates = await this.fetchAndDestructureLocationData();
+    const weatherData = await this.fetchWeatherData(coordinates);
+    const forcastData = await this.fetchForcastData(coordinates);
+    const currentWeather = this.parseCurrentWeather(weatherData);
+    return this.buildForecastArray(currentWeather, forcastData.list);
+  }
   // TODO: Define the baseURL, API key, and city name properties
   // TODO: Create fetchLocationData method
   // private async fetchLocationData(query: string) {}

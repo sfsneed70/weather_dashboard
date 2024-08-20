@@ -13,7 +13,6 @@
   Clone the repository from github.  Install the dependent packages using:  npm install
   ## Usage
   Run the application using:  npm start<br>
-  Link to video walkthrough of using the application:  
   ## Contributing
   Fork the project.  Create a feature branch.  Commit your changes.  Push the branch.  Open a pull request.
   ## Tests
