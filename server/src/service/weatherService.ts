@@ -89,7 +89,6 @@ class WeatherService {
     );
   }
   private buildForecastArray(currentWeather: Weather, forcastData: any[]) {
-    // console.log('weatherData', weatherData);
     let weatherData: Weather[] = [];
     weatherData.push(currentWeather);
     for (let i = 0; i < forcastData.length; i++) {
