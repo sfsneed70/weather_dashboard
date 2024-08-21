@@ -79,8 +79,8 @@ class WeatherService {
   private parseCurrentWeather(response: any) {
     return new Weather(
       this.cityName || "",
-      // new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      new Date().toLocaleDateString(),
+      new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      // new Date().toLocaleDateString(),
       response.weather[0].icon,
       response.weather[0].description,
       response.main.temp,
