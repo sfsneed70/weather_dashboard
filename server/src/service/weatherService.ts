@@ -94,7 +94,7 @@ class WeatherService {
     for (let i = 0; i < forcastData.length; i++) {
       const data = forcastData[i];
       const date = new Date(data.dt_txt+' UTC').toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      if (date.includes("5:00:00 PM")) {
+      // if (date.includes("5:00:00 PM")) {
         weatherData.push(
           new Weather(
             currentWeather.city,
@@ -106,7 +106,7 @@ class WeatherService {
             data.main.humidity
           )
         );
-      }
+      // }
     }
     return weatherData;
   }
