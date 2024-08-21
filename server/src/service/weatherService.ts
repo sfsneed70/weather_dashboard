@@ -79,8 +79,7 @@ class WeatherService {
   private parseCurrentWeather(response: any) {
     return new Weather(
       this.cityName || "",
-      new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      // new Date().toLocaleDateString(),
+      new Date().toLocaleDateString(),
       response.weather[0].icon,
       response.weather[0].description,
       response.main.temp,
@@ -92,9 +91,19 @@ class WeatherService {
     let weatherData: Weather[] = [];
     weatherData.push(currentWeather);
     for (let i = 0; i < forcastData.length; i++) {
-      const data = forcastData[i];
-      const date = new Date(data.dt_txt+' UTC').toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      // if (date.includes("5:00:00 PM")) {
+      if ((i + 1) % 8 === 0) {
+        const data = forcastData[i];
+        const date = new Date(data.dt_txt + " UTC").toLocaleDateString(
+          "en-US",
+          {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }
+        );
         weatherData.push(
           new Weather(
             currentWeather.city,
@@ -106,7 +115,7 @@ class WeatherService {
             data.main.humidity
           )
         );
-      // }
+      }
     }
     return weatherData;
   }
