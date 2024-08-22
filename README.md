@@ -1,7 +1,7 @@
 # Weather Dashboard
   ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
   ## Description
-  A weather dashboard application that calls the OpenWeather API and renders data in the browser.
+  A weather dashboard application that calls the OpenWeather API and renders data in the browser.  Allows the user to enter a city and displays the current weather along with a 5 day forecast.  Keeps a history of cities that have been searched and also allows the user to remove cities from the history.
   ## Table of Contents
   - [Installation](#installation)
   - [Usage](#usage)
