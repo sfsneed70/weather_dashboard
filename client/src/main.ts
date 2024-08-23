@@ -98,7 +98,6 @@ const renderCurrentWeather = (currentWeather: any): void => {
       }
     
   );
-  console.log(localDate);
   heading.textContent = `${city} (${localDate})`;
   weatherIcon.setAttribute(
     "src",
