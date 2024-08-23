@@ -86,19 +86,7 @@ const renderCurrentWeather = (currentWeather: any): void => {
     currentWeather;
 
   // convert the following to typescript
-  let localDate = new Date(date).toLocaleDateString(
-          
-        "en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      }
-    
-  );
-  heading.textContent = `${city} (${localDate})`;
+  heading.textContent = `${city} (${date})`;
   weatherIcon.setAttribute(
     "src",
     `https://openweathermap.org/img/w/${icon}.png`
@@ -141,19 +129,7 @@ const renderForecastCard = (forecast: any) => {
     createForecastCard();
 
   // Add content to elements
-  let localDate = new Date(date).toLocaleDateString(
-          
-    "en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }
-
-);
-  cardTitle.textContent = localDate;
+  cardTitle.textContent = date;
   weatherIcon.setAttribute(
     "src",
     `https://openweathermap.org/img/w/${icon}.png`
