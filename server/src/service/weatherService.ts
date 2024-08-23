@@ -77,18 +77,17 @@ class WeatherService {
     return await response.json();
   }
   private parseCurrentWeather(response: any) {
+    console.log(new Date().toDateString());
     return new Weather(
       this.cityName || "",
-      new Date().toLocaleDateString(
-      //   "en-US", {
-      //   year: "numeric",
-      //   month: "2-digit",
-      //   day: "2-digit",
-      //   hour: "2-digit",
-      //   minute: "2-digit",
-      //   second: "2-digit",
-      // }
-    ),
+      new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
       response.weather[0].icon,
       response.weather[0].description,
       response.main.temp,
@@ -103,15 +102,15 @@ class WeatherService {
       if ((i + 1) % 8 === 0) {
         const data = forcastData[i];
         const date = new Date(data.dt_txt + " UTC").toLocaleDateString(
-          // "en-US",
-          // {
-          //   year: "numeric",
-          //   month: "2-digit",
-          //   day: "2-digit",
-          //   hour: "2-digit",
-          //   minute: "2-digit",
-          //   second: "2-digit",
-          // }
+          "en-US",
+          {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }
         );
         weatherData.push(
           new Weather(
