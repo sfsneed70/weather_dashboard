@@ -86,7 +86,6 @@ const renderCurrentWeather = (currentWeather: any): void => {
     currentWeather;
 
   // convert the following to typescript
-  console.log(date);
   let localDate = new Date(date).toLocaleDateString(
           
         "en-US", {

@@ -77,7 +77,6 @@ class WeatherService {
     return await response.json();
   }
   private parseCurrentWeather(response: any) {
-    console.log(new Date().toDateString());
     return new Weather(
       this.cityName || "",
       new Date().toLocaleDateString("en-US", {
